@@ -1,13 +1,10 @@
-import Post from './Post'
-
-const Feed = ({ posts }) => {
+const Footer = () => {
+    const today = new Date();
     return (
-        <>
-            {posts.map(post => (
-                <Post key={post.id} post={post} />
-            ))}
-        </>
+        <footer className='Footer'>
+            <p>Copyright &copy; {today.getFullYear()}</p>
+        </footer>
     )
 }
 
-export default Feed
+export default Footer

@@ -1,10 +1,9 @@
-const Footer = () => {
-    const Today = new Date();
+const Header = ({ title }) => {
     return (
-        <footer className="Footer">
-            <p>Copyright &copy; {Today.getFullYear()}</p>
-        </footer>
+        <header className="Header">
+            <h1>{title}</h1>
+        </header>
     )
- }
- 
- export default Footer
+}
+
+export default Header
