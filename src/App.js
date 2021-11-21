@@ -9,6 +9,7 @@ import Missing from './Components/Missing';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import api from './api/posts'
 
 function App() {
   const [posts, setPosts] = useState([
@@ -18,6 +19,20 @@ function App() {
   const [postTitle, setPostTitle] = useState('');
   const [postBody, setPostBody] = useState('');
   const history = useHistory();
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await api.get('/posts')
+        setPosts(response.data);
+      } catch (err) {
+        //Not in the 200 response range
+        console.log(err.response.data);
+        console.log(err.response.status);
+        console.log(err.response.headers); 
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const filteredResults = posts.filter((post) =>
