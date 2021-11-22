@@ -10,6 +10,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import api from './api/posts'
+import { set } from 'date-fns/esm';
 
 function App() {
   const [posts, setPosts] = useState([
@@ -23,16 +24,21 @@ function App() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await api.get('/posts')
+        const response = await api.get('/posts');
         setPosts(response.data);
-      } catch (err) {
-        //Not in the 200 response range
-        console.log(err.response.data);
-        console.log(err.response.status);
-        console.log(err.response.headers); 
+      } catch (error) {
+        if(error.response) {
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else{
+          console.log(`Error: ${error.message}`)
+        }
       }
     }
-  }, [])
+
+    fetchPosts();
+  }, [])  
 
   useEffect(() => {
     const filteredResults = posts.filter((post) =>
@@ -41,17 +47,21 @@ function App() {
 
     setSearchResults(filteredResults.reverse());
   }, [posts, search])
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
     const datetime = format(new Date(), 'MMMM dd, yyyy pp');
     const newPost = { id, title: postTitle, datetime, body: postBody };
-    const allPosts = [...posts, newPost];
-    setPosts(allPosts);
-    setPostTitle('');
-    setPostBody('');
-    history.push('/');
+    try{
+      const allPosts = [...posts, newPost];
+      setPosts(allPosts);
+      setPostTitle('');
+      setPostBody('');
+      history.push('/');
+    } catch (err) {
+      console.log(`Error: ${err.message}`)
+    }
   }
 
   const handleDelete = (id) => {
